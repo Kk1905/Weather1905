@@ -37,6 +37,7 @@ public class Weather1905DB {
     private Weather1905DB(Context context) {
         Weather1905DBHelper dbHelper = new Weather1905DBHelper(context, DB_NAME, null, VERSION);
         db = dbHelper.getWritableDatabase();
+
     }
 
     /**
@@ -56,7 +57,7 @@ public class Weather1905DB {
         if (province != null) {
             ContentValues contentValues = new ContentValues();
             contentValues.put("province_name", province.getProvinceName());
-            contentValues.put("province_code", province.getProvinceName());
+            contentValues.put("province_code", province.getProvinceCode());
             db.insert("Province", null, contentValues);
         }
     }
@@ -96,12 +97,12 @@ public class Weather1905DB {
 
     }
     /**
-     * 将各省份的city信息从数据库读取
+     * 将某省份的city信息从数据库读取
      */
-    public List<City> loadCity()
+    public List<City> loadCity(int provinceId)
     {
         List<City> list=new ArrayList<>();
-        Cursor cursor=db.query("City",null,null,null,null,null,null);
+        Cursor cursor=db.query("City",null,"province_id=?",new String[]{String.valueOf(provinceId)},null,null,null);
         if (cursor.moveToFirst())
         {
             do {
@@ -109,7 +110,7 @@ public class Weather1905DB {
                 city.setId(cursor.getInt(cursor.getColumnIndex("id")));
                 city.setCityName(cursor.getString(cursor.getColumnIndex("city_name")));
                 city.setCityCode(cursor.getString(cursor.getColumnIndex("city_code")));
-                city.setProvinceId(cursor.getInt(cursor.getColumnIndex("province_id")));
+                city.setProvinceId(provinceId);
                 list.add(city);
             }while (cursor.moveToNext());
         }
@@ -132,12 +133,12 @@ public class Weather1905DB {
         }
     }
     /**
-     * 从数据库查询各城市下所有县的信息
+     * 从数据库查询某城市下所有县的信息
      */
-    public List<County> loadCounty()
+    public List<County> loadCounty(int cityId)
     {
         List<County> list=new ArrayList<>();
-        Cursor cursor=db.query("County",null,null,null,null,null,null);
+        Cursor cursor=db.query("County",null,"city_id=?",new String[]{String.valueOf(cityId)},null,null,null);
         if (cursor.moveToFirst())
         {
             do {
@@ -145,7 +146,7 @@ public class Weather1905DB {
                 county.setId(cursor.getInt(cursor.getColumnIndex("id")));
                 county.setCountyName(cursor.getString(cursor.getColumnIndex("county_name")));
                 county.setCountyCode(cursor.getString(cursor.getColumnIndex("county_code")));
-                county.setCityId(cursor.getInt(cursor.getColumnIndex("city_id")));
+                county.setCityId(cityId);
                 list.add(county);
             }while (cursor.moveToNext());
         }

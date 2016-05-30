@@ -12,14 +12,14 @@ public class Weather1905DBHelper extends SQLiteOpenHelper {
     /**
      * Province表建表语句
      */
-    private static final String CREATE_PROVINCE="create table Province(" +
+    private static final String CREATE_PROVINCE = "create table Province(" +
             "id integer primary key autoincrement," +
             "province_name text," +
             "province_code text)";
     /**
      * City表建表语句，province_id是关联Province表的外键
      */
-    private static final String CREATE_CITY="create table City(" +
+    private static final String CREATE_CITY = "create table City(" +
             "id integer primary key autoincrement," +
             "city_name text," +
             "city_code text," +
@@ -27,16 +27,16 @@ public class Weather1905DBHelper extends SQLiteOpenHelper {
     /**
      * County表建表语句，city_id是关联City表的外键
      */
-    private static final String CREATE_COUNTY="create table County(" +
+    private static final String CREATE_COUNTY = "create table County(" +
             "id integer primary key autoincrement," +
             "county_name text," +
             "county_code text," +
             "city_id integer)";
 
-    public Weather1905DBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory,int version)
-    {
-     super(context,name,factory,version);
+    public Weather1905DBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+        super(context, name, factory, version);
     }
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_PROVINCE);//创建Province表
