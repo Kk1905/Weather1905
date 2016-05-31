@@ -267,5 +267,8 @@ public class ChooseAreaActivity extends Activity {
                 startActivity(intent);
                 finish();//退出目前的Activity
             }
+        else {
+            finish();
+        }
     }
 }
