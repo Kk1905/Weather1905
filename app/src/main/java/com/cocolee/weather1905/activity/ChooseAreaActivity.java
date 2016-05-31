@@ -71,17 +71,23 @@ public class ChooseAreaActivity extends Activity {
      */
     private int currentLevel;
 
+    /**
+     * 设置标志位，表示是否从WeatherActivity跳转过来
+     */
+    private boolean isFromWeatherActivity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SharedPreferences sharedPreferences=getSharedPreferences("weatherInfo",MODE_PRIVATE);
-        if (sharedPreferences.getBoolean("city_selected",false))
-        {
-            Intent intent=new Intent(this,WeatherActivity.class);
+        isFromWeatherActivity = getIntent().getBooleanExtra("from WeatherActivity", false);
+        SharedPreferences sharedPreferences = getSharedPreferences("weatherInfo", MODE_PRIVATE);
+        //再添加一个判断，sharedPreferences中存在数据，并且不是从WeatherActivity跳转过来，才会直接启动WeatherActivity
+        if (sharedPreferences.getBoolean("city_selected", false) && !isFromWeatherActivity) {
+            Intent intent = new Intent(this, WeatherActivity.class);
             startActivity(intent);
             finish();
-            return;
+            return;//结束方法的执行
         }
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -102,11 +108,10 @@ public class ChooseAreaActivity extends Activity {
                 } else if (currentLevel == LEVEL_CITY) {
                     selectedCity = cityList.get(position);
                     queryCounty();
-                }else if (currentLevel==LEVEL_COUNTY)
-                {
-                    String countyCode=countyList.get(position).getCountyCode();
-                    Intent intent=new Intent(ChooseAreaActivity.this,WeatherActivity.class);
-                    intent.putExtra("county_code",countyCode);
+                } else if (currentLevel == LEVEL_COUNTY) {
+                    String countyCode = countyList.get(position).getCountyCode();
+                    Intent intent = new Intent(ChooseAreaActivity.this, WeatherActivity.class);
+                    intent.putExtra("county_code", countyCode);
                     startActivity(intent);
                     finish();
                 }
@@ -177,7 +182,7 @@ public class ChooseAreaActivity extends Activity {
         String address;
         if (!TextUtils.isEmpty(code)) {
             address = "http://www.weather.com.cn/data/list3/city" + code + ".xml";
-            Log.d("kk","---------->"+code);
+            Log.d("kk", "---------->" + code);
         } else
             address = "http://www.weather.com.cn/data/list3/city.xml";
 
@@ -255,7 +260,12 @@ public class ChooseAreaActivity extends Activity {
             queryCity();
         else if (currentLevel == LEVEL_CITY)
             queryProvince();
-        else
-            finish();//退出activity
+            //如果是从WeatherActivity跳转过来的，还要跳转到WeatherActivity，而不是退出
+        else if (isFromWeatherActivity)
+             {
+                Intent intent = new Intent(this, WeatherActivity.class);
+                startActivity(intent);
+                finish();//退出目前的Activity
+            }
     }
 }
