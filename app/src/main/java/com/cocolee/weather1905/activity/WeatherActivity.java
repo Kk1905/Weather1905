@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cocolee.weather1905.R;
+import com.cocolee.weather1905.service.AutoUpdateService;
 import com.cocolee.weather1905.util.HttpCallbackListener;
 import com.cocolee.weather1905.util.HttpUtil;
 import com.cocolee.weather1905.util.Utility;
@@ -163,6 +164,9 @@ public class WeatherActivity extends Activity implements View.OnClickListener {
         currentDateText.setText(sharedPreferences.getString("current_date", ""));
         weatherInfoLayout.setVisibility(View.VISIBLE);
         cityNameText.setVisibility(View.VISIBLE);
+        //第一次执行showWeather()的时候，就会开启服务，之后服务会一直在后台运行，并且每3小时更新sharedPreferences
+        Intent intent=new Intent(this, AutoUpdateService.class);
+        startService(intent);
     }
 
     @Override
