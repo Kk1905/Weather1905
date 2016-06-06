@@ -150,6 +150,7 @@ public class WeatherActivity extends Activity implements View.OnClickListener {
         });
     }
 
+
     /**
      * 从SharedPreferences文件中读取存储的天气信息，并显示到界面上
      */
